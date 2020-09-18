@@ -6,19 +6,24 @@ const jwt = require('jsonwebtoken')
 router.post('/register', (req, res) => {
   const user = req.body
   if(user.username && user.password){
-    const hash = bcrypt.hash(user.password, 4)
-    user.password = hash
+    const hash = bcrypt.hash(user.password, 12)
+    .then(password => {
+      user.password = password;
+    })
+    .catch(err => {
+      res.status(400).json({message: "Bad Request"})
+    })
 
     db.register(user)
     .then(user => {
-      if(user.length > 0){
+      if(user){
         const token = generateToken(user)
         res.status(201).json({user, token}).end()
       }else{
         res.status(400).json({message: "There has been an error"}).end()
       }
     })
-    .catch(err => res.status(500).json(err))
+    .catch(err => res.status(500).json(err).end())
 
   }else{
     res.status(400).json({message: "Please fill out all fields"}).end()

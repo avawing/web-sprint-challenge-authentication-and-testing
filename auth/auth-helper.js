@@ -1,17 +1,20 @@
 const db = require('../database/dbConfig')
 
-function register(user){
+async function register(user){
     return db("users").insert(user)
-    // .then(id =>{
-    //     return findBy(id[0])
-    // })
-    // .catch(
-    //     err=> {return err}
-    // )
+    .then(id =>{
+        return findById(id[0])
+    })
+    .catch(
+        err=> {return err}
+    )
 }
 
-function findBy(id){
+async function findById(id){
     return db("users").where({id}).first()
+}
+function findBy({filter}){
+    return db("users").where({filter}).first()
 }
 
 module.exports = {register, findBy}
