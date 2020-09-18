@@ -14,7 +14,7 @@ async function findById(id){
     return db("users").where({id}).first()
 }
 function findBy(filter){
-    return db("users").where({"username" : filter})
+    return db("users").where({"username" : filter}).first()
 }
 
 module.exports = {register, findBy}
