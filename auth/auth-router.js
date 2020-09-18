@@ -1,19 +1,18 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt')
-const session = require('express-session')
 const db = require('./auth-helper')
 const jwt = require('jsonwebtoken')
 
 router.post('/register', (req, res) => {
   const user = req.body
   if(user.username && user.password){
-    const hash = bcrypt.hash(user.password, 12)
+    const hash = bcrypt.hash(user.password, 4)
     user.password = hash
 
     db.register(user)
     .then(user => {
-      if(user.length){
-        generateToken(user)
+      if(user.length > 0){
+        const token = generateToken(user)
         res.status(201).json({user, token}).end()
       }else{
         res.status(400).json({message: "There has been an error"}).end()
