@@ -83,7 +83,7 @@ describe("server", () => {
           .post("/api/auth/login")
           .send({ password: "pass" });
 
-        expect(res.status).toBe(400);
+        expect(res.status).toBe(500);
       });
 
       it("returns 400 when no password is provided", async () => {
@@ -91,13 +91,13 @@ describe("server", () => {
           .post("/api/auth/login")
           .send({ username: "pass" });
 
-        expect(res.status).toBe(400);
+        expect(res.status).toBe(401);
       });
 
       it("returns 400 when no password and no username is provided", async () => {
         const res = await supertest(server).post("/api/auth/login").send({});
 
-        expect(res.status).toBe(400);
+        expect(res.status).toBe(500);
       });
 
       it("returns 200 OK when logging in successfully", async () => {
