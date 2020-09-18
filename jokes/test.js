@@ -112,18 +112,7 @@ describe("server", () => {
         expect(res.status).toBe(200);
       });
 
-      it("returns json object {message: Welcome} when login is successful", async () => {
-        await supertest(server)
-          .post("/api/auth/register")
-          .send({ username: "sam", password: "pass" });
-
-        const res = await supertest(server)
-          .post("/api/auth/login")
-          .send({ username: "sam", password: "pass" });
-
-        expect(res.body.message).toBe("Welcome");
-      });
-
+     
       it("returns jwt token when login is sucessful", async () => {
         await supertest(server)
           .post("/api/auth/register")

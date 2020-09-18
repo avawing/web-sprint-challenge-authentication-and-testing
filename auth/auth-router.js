@@ -33,15 +33,14 @@ router.post('/register', (req, res) => {
 
 router.post('/login', (req, res) => {
 
-  const loggedUser = req.body
-  db.findBy({username: loggedUser.username})
-  .then(user=>{
-    if(user && bcrypt.compareSync(loggedUser.password, user.password)){
-      const token = generateToken(user)
-      res.status(200).json({message: "Welcome aboard!", user, token}).end()
-    }else{
-      res.status(401).json({message: "Invalid credentials"}).end()
-    }
+  const {username, password} = req.body
+  db.findBy({"username": username})
+  .then(([user])=>{
+      bcrypt.compareSync(password, user.password)
+      .then(user => {      const token = generateToken(user)
+        res.status(200).json({message: "Welcome aboard!", user, token}).end()})
+      .catch(err =>       res.status(401).json({message: "Invalid credentials"}).end())
+
   })
   .catch(err => {
     res.status(500).json({message: err})
@@ -63,4 +62,8 @@ function generateToken(user) {
   }
   return jwt.sign(payload, secrets.jwtSecret, options);
 }
+
+
+
+
 module.exports = router;
